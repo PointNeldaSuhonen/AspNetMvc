@@ -1,0 +1,30 @@
+﻿@model IEnumerable<AspNetMvc.Models.Projektit>
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Projektit, staattinen tapa tuoda tietoa</h2>
+
+<p>Kontrollerista tullutta tietoa: <strong>@ViewBag.OmaTieto</strong>.</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ProjektiID</th>
+            <th>Nimi</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (AspNetMvc.Models.Projektit proj in Model)
+        {
+            <tr>
+                <td>@proj.ProjektiID</td>
+                <td>@proj.Nimi</td>
+                
+            </tr>
+        }
+    </tbody>
+
+</table>
+
+<p>Projekteja yhteensä: @Model.Count().</p>

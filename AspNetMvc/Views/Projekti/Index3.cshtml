@@ -1,0 +1,142 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+@section scripts {
+
+    <script type="text/javascript">
+        function päivitäProjektilistaus() {
+            $.getJSON("/projekti/getlist", null, function (json) {
+                var projektit = JSON.parse(json);
+                alert("Projektien lukumäärä: " + projektit.length);
+
+                var html = "";
+                for (var index = 0; index < projektit.length; index++) {
+                    html += "<tr>" +
+                        "<td><a href='#'><span class='glyphicon glyphicon-pencil'></span></a></td>" +
+                        "<td>" + projektit[index].ProjektiID + "</td>" +
+                        "<td>" + projektit[index].Nimi + "</td>" +
+                        "<td><a href='#'><span class='glyphicon glyphicon-trash'></span></a></td>" +
+                        "</tr>\r\n"
+                }
+
+                $("#projektiList tbody").html(html);
+
+                // tietojen muokkaus
+                $(".glyphicon-pencil").click(function () {
+                    // etsitään projektin tiedot klikatulta riviltä
+                    var projektiID = $(this).parent().parent().next().text();
+                    //alert(projektiID);
+
+                    // haetaan projektin tiedot id:n perusteella
+                    $.getJSON("/projekti/getsingleprojekti/" + projektiID, null, function (json2) {
+                        var projektit = JSON.parse(json2);
+
+                        // kopioidaan tiedot ikkunaan
+                        $("#projektiModal_ProjektiID").val(projektit.projektiID);
+                        $("#projektiModal_Nimi").val(projektit.Nimi);
+
+                        // näytetään ikkuna
+                        $("#projektiModalTitle").text("Muokkaa projektia");
+                        $("#projektiModalDialog").modal("show");
+                    });
+                });
+
+                //tietojen poisto
+                $(".glyphicon-trash").click(function () {
+                    //etsitään projektin tiedot klikatulta riviltä
+                    //alert("Poista!");
+                    var projektiID = $(this).parent().parent().prev().prev().text();
+                    var ok = confirm("Haluatko varmasti poistaa projektin " + projektiID + "?");
+
+                    if (ok == true) {
+                        $.getJSON("/projekti/delete/" + projektiID, null, function (status) {
+                            if (status == true) {
+                                alert("Projekti on nyt poistettu!");
+                                päivitäProjektilistaus();
+                            }
+                            else {
+                                alert("Poistaminen ei onnistunut, yritä uudelleen!");
+                            }
+                        });
+                    }
+                });
+            });
+        }
+
+                //sivun alustaminen
+                $(function () {
+                    päivitäProjektilistaus();
+                    $("#lisaaUusiProjektiButton").click(function () {
+
+                        // Tyhjennetään ikkunan tiedot
+                        $("#projektiModal_ProjektiID").val("(Uusi ID)");
+                        $("#projektiModal_Nimi").val("");
+
+                        $("#projektiModalTitle").text("Lisää uusi projekti");
+                        $("#projektiModalDialog").modal("show");
+                    });
+
+                    $("#projektiModalSaveButton").click(function () {
+                        // luetaan käyttäjän syöttämät kentät
+                        var details = {
+                            ProjektiID: $("#projektiModal_ProjektiID").val(),
+                            Nimi: $("#projektiModal_Nimi").val(),
+                        };
+
+                        $.post("/projekti/update/", details, function (status) {
+                            if (status == true) {
+                                alert("Uudet tiedot tallennettu!");
+                                $("#projektiModalDialog").modal("hide");
+                                päivitäProjektilistaus();
+                            }
+                            else {
+                                alert("Tallennus ei onnistunut, yritä uudelleen!");
+                            }
+                        });
+                    });
+                    console.log("Alustus valmis!");
+                });
+
+
+    </script>
+}
+    <h2>Projektit, dynaaminen muokkaus Ajaxilla</h2>
+<Button class="btn btn-default" id="lisaaUusiProjektiButton">Lisää uusi projekti</Button>
+
+<table class="table table-striped" id="projektiList">
+    <thead>
+        <tr>
+            <th></th>
+            <th>ProjektiID</th>
+            <th>Nimi</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+
+</table>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="projektiModalDialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><span id="projektiModalTitle">Muokkaa projektia</span></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-3">Projektin ID</div>
+                    <div class="col-md-6"><input class="form-control" id="projektiModal_ProjektiID" type="text" readonly></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">Nimi</div>
+                    <div class="col-md-6"><input class="form-control" id="projektiModal_Nimi" type="text"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Sulje</button>
+                <button type="button" class="btn btn-primary" id="projektiModalSaveButton">Tallenna</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

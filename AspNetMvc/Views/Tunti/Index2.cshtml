@@ -1,0 +1,43 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+@section scripts {
+
+    <script type="text/javascript">
+        $(function () {
+            $.getJSON("/tunti/getlist", null, function (json) {
+                var tunnit = JSON.parse(json);
+                alert("Tuntien lukumäärä: " + tunnit.length);
+
+                var html = "";
+                for (var index = 0; index < tunnit.length; index++) {
+                    html += "<tr>" +
+                        "<td>" + tunnit[index].TuntiID + "</td>" +
+                        "<td>" + tunnit[index].ProjektiID + "</td>" +
+                        "<td>" + tunnit[index].HenkiloID + "</td>" +
+                        "<td>" + tunnit[index].Pvm + "</td>" +
+                        "<td>" + tunnit[index].Tunnit + "</td>" +
+                        "</tr>\r\n"
+                }
+
+                $("#tuntiList tbody").html(html);
+            });
+        });
+    </script>
+}
+<h2>Tunnit, dynaaminen tapa Ajaxilla</h2>
+
+
+<table class="table table-striped" id="tuntiList">
+    <thead>
+        <tr>
+            <th>TuntiID</th>
+            <th>ProjektiID</th>
+            <th>HenkiloID</th>
+            <th>Pvm</th>
+            <th>Tunnit</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+
+</table>

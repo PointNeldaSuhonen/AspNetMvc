@@ -1,0 +1,45 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+@section scripts {
+    
+    <script type="text/javascript">
+        $(function () {
+            $.getJSON("/henkilo/getlist", null, function (json) {
+                var henkilot = JSON.parse(json);
+                alert("Henkilöiden lukumäärä: " + henkilot.length);
+
+                var html = "";
+                for (var index = 0; index < henkilot.length; index++) {
+                  html += "<tr>"+
+                              "<td>" + henkilot[index].HenkiloID + "</td>" +
+                              "<td>" + henkilot[index].Etunimi + "</td>" +
+                              "<td>" + henkilot[index].Sukunimi + "</td>" +
+                              "<td>" + henkilot[index].Osoite + "</td>" +
+                              "<td>" + henkilot[index].Esimies + "</td>" +
+                    "</tr>\r\n"
+                }
+
+                $("#henkiloList tbody").html(html);
+            });
+        });
+    </script>
+    }
+<h2>Henkilöt, dynaaminen tapa Ajaxilla</h2>
+
+
+<table class="table table-striped" id="henkiloList">
+    <thead>
+        <tr>
+            <th>HenkiloID</th>
+            <th>Etunimi</th>
+            <th>Sukunimi</th>
+            <th>Osoite</th>
+            <th>Esimies</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+
+</table>

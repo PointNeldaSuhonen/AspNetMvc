@@ -1,0 +1,36 @@
+﻿@model IEnumerable<AspNetMvc.Models.Tunnit>
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Tunnit, staattinen tapa tuoda tietoa</h2>
+
+<p>Kontrollerista tullutta tietoa: <strong>@ViewBag.OmaTieto</strong>.</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>TuntiID</th>
+            <th>ProjektiID</th>
+            <th>HenkiloID</th>
+            <th>Pvm</th>
+            <th>Tunnit</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (AspNetMvc.Models.Tunnit tunn in Model)
+        {
+        <tr>
+            <td>@tunn.TuntiID</td>
+            <td>@tunn.HenkiloID</td>
+            <td>@tunn.ProjektiID</td>
+            <td>@tunn.Pvm</td>
+            <td>@tunn.Tunnit</td>
+
+        </tr>
+        }
+    </tbody>
+
+</table>
+
+<p>Tuntimäärä: @Model.Count().</p>

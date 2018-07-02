@@ -1,0 +1,35 @@
+﻿@model IEnumerable<AspNetMvc.Models.Henkilot>
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Henkilöt, staattinen tapa tuoda tietoa</h2>
+
+<p>Kontrollerista tullutta tietoa: <strong>@ViewBag.OmaTieto</strong>.</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>HenkiloID</th>
+            <th>Etunimi</th>
+            <th>Sukunimi</th>
+            <th>Osoite</th>
+            <th>Esimies</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (AspNetMvc.Models.Henkilot henk in Model)
+        {
+        <tr>
+            <td>@henk.HenkiloID</td>
+            <td>@henk.Etunimi</td>
+            <td>@henk.Sukunimi</td>
+            <td>@henk.Osoite</td>
+            <td>@henk.Esimies</td>
+        </tr>
+        }
+    </tbody>
+
+</table>
+
+<p>Henkilöitä yhteensä: @Model.Count().</p>

@@ -1,0 +1,37 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+@section scripts {
+
+    <script type="text/javascript">
+        $(function () {
+            $.getJSON("/projekti/getlist", null, function (json) {
+                var projektit = JSON.parse(json);
+                alert("Projektien lukumäärä: " + projektit.length);
+
+                var html = "";
+                for (var index = 0; index < projektit.length; index++) {
+                    html += "<tr>" +
+                        "<td>" + projektit[index].ProjektiID + "</td>" +
+                        "<td>" + projektit[index].Nimi + "</td>" +
+                        "</tr>\r\n"
+                }
+
+                $("#projektiList tbody").html(html);
+            });
+        });
+    </script>
+}
+<h2>Projektit, dynaaminen tapa Ajaxilla</h2>
+
+
+<table class="table table-striped" id="projektiList">
+    <thead>
+        <tr>
+            <th>ProjektiID</th>
+            <th>Nimi</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+
+</table>
